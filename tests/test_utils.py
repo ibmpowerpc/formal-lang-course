@@ -4,7 +4,7 @@ import cfpq_data
 import pytest
 from networkx import MultiDiGraph
 
-from project.__main__ import build_two_cycled_graph, count_by_name
+from project.utils import build_two_cycled_graph, count_by_name
 
 
 def test_count_by_name_returns_graph_statistics(
@@ -47,27 +47,36 @@ def test_count_by_name_propagates_download_error(
         count_by_name("unknown")
 
 
-def test_build_two_cycled_graph_returns_expected_graph():
+def test_build_two_cycled_graph_returns_expected_graph(tmp_path: Path):
     first_cycle_size = 2
     second_cycle_size = 3
+    output_path = tmp_path / "two_cycles.dot"
 
     graph = build_two_cycled_graph(
         first_cycle_size,
         second_cycle_size,
         labels=("left", "right"),
+        output_path=output_path,
     )
 
     assert isinstance(graph, MultiDiGraph)
     assert graph.number_of_nodes() == first_cycle_size + second_cycle_size + 1
     assert graph.number_of_edges() == first_cycle_size + second_cycle_size + 2
+    assert output_path.is_file()
+    assert output_path.read_text(encoding="utf-8").startswith("digraph")
 
     labels = [data["label"] for _, _, data in graph.edges(data=True)]
     assert labels.count("left") == first_cycle_size + 1
     assert labels.count("right") == second_cycle_size + 1
 
 
-def test_build_two_cycled_graph_uses_zero_as_common_node():
-    graph = build_two_cycled_graph(2, 3, labels=("left", "right"))
+def test_build_two_cycled_graph_uses_zero_as_common_node(tmp_path: Path):
+    graph = build_two_cycled_graph(
+        2,
+        3,
+        labels=("left", "right"),
+        output_path=tmp_path / "two_cycles.dot",
+    )
 
     outgoing_labels = {
         data["label"] for _, _, data in graph.out_edges(0, data=True)
