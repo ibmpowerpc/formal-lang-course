@@ -32,9 +32,7 @@ def build_two_cycled_graph(
     for node in graph.nodes:
         dot_graph.add_node(pydot.Node(str(node)))
     for source, target, data in graph.edges(data=True):
-        dot_graph.add_edge(
-            pydot.Edge(str(source), str(target), label=data["label"])
-        )
+        dot_graph.add_edge(pydot.Edge(str(source), str(target), label=data["label"]))
 
     dot_graph.write_raw(str(output_path))
     return graph

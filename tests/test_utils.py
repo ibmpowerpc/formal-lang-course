@@ -78,12 +78,8 @@ def test_build_two_cycled_graph_uses_zero_as_common_node(tmp_path: Path):
         output_path=tmp_path / "two_cycles.dot",
     )
 
-    outgoing_labels = {
-        data["label"] for _, _, data in graph.out_edges(0, data=True)
-    }
-    incoming_labels = {
-        data["label"] for _, _, data in graph.in_edges(0, data=True)
-    }
+    outgoing_labels = {data["label"] for _, _, data in graph.out_edges(0, data=True)}
+    incoming_labels = {data["label"] for _, _, data in graph.in_edges(0, data=True)}
 
     assert outgoing_labels == {"left", "right"}
     assert incoming_labels == {"left", "right"}
