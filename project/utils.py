@@ -14,6 +14,9 @@ from pyformlang.regular_expression import Regex
 from scipy.sparse import csr_matrix, eye, kron
 
 
+# TASK 1
+
+
 def count_by_name(name: str):
     path = cfpq_data.download(name)
     graph = cfpq_data.graph_from_csv(path)
@@ -42,6 +45,9 @@ def build_two_cycled_graph(
     return graph
 
 
+# TASK 2
+
+
 def regex_to_dfa(regex: str) -> DeterministicFiniteAutomaton:
     return Regex(regex).to_epsilon_nfa().to_deterministic().minimize()
 
@@ -67,12 +73,13 @@ def graph_to_nfa(
     return nfa
 
 
+# TASK 3
+
+
 class AdjacencyMatrixFA:
     def __init__(self, automaton: NondeterministicFiniteAutomaton):
         self.states = tuple(automaton.states)
-        self.state_to_index = {
-            state: index for index, state in enumerate(self.states)
-        }
+        self.state_to_index = {state: index for index, state in enumerate(self.states)}
         self.start_states = {
             self.state_to_index[state] for state in automaton.start_states
         }
@@ -116,9 +123,7 @@ class AdjacencyMatrixFA:
     ) -> "AdjacencyMatrixFA":
         automaton = cls.__new__(cls)
         automaton.states = states
-        automaton.state_to_index = {
-            state: index for index, state in enumerate(states)
-        }
+        automaton.state_to_index = {state: index for index, state in enumerate(states)}
         automaton.start_states = start_states
         automaton.final_states = final_states
         automaton.matrices = matrices
@@ -218,9 +223,7 @@ def tensor_based_rpq(
     start_nodes: set[int],
     final_nodes: set[int],
 ) -> set[tuple[int, int]]:
-    graph_automaton = AdjacencyMatrixFA(
-        graph_to_nfa(graph, start_nodes, final_nodes)
-    )
+    graph_automaton = AdjacencyMatrixFA(graph_to_nfa(graph, start_nodes, final_nodes))
     regex_automaton = AdjacencyMatrixFA(regex_to_dfa(regex))
     intersection = intersect_automata(graph_automaton, regex_automaton)
     closure = intersection._transitive_closure()
