@@ -12,10 +12,10 @@ from rpq_concrete_cases import CASES_RPQ, CaseRPQ
 
 # Fix import statements in try block to run tests
 try:
-    from project.utils import (
+    from project.task2 import regex_to_dfa
+    from project.task3 import (
         AdjacencyMatrixFA,
         intersect_automata,
-        regex_to_dfa,
         tensor_based_rpq,
     )
 except ImportError:
